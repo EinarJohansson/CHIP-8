@@ -2,7 +2,7 @@
 CHIP-8 emulator written in rust😸🎮
 
 ### TODO
-- [ ] Scale resolution
+- [x] Scale resolution
 - [ ] Sound
 - [ ] Input
 - [ ] Timers

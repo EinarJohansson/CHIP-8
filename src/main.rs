@@ -5,13 +5,14 @@ use minifb::{Window, WindowOptions};
 
 const WIDTH: usize = 64;
 const HEIGHT: usize = 32;
+const SCALE: usize = 10;
 
 fn main() {
     // A window to draw on
     let mut window = Window::new(
         "CHIP-8",
-        WIDTH,
-        HEIGHT,
+        WIDTH * SCALE,
+        HEIGHT * SCALE,
         WindowOptions::default(),
     )
     .unwrap_or_else(|e| {
