@@ -1,4 +1,4 @@
-mod video;
+pub mod video;
 use video::Video;
 
 /// A chip-8 emulator🎮

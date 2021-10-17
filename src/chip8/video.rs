@@ -1,4 +1,6 @@
-use crate::{HEIGHT, WIDTH};
+pub const WIDTH: usize = 64;
+pub const HEIGHT: usize = 32;
+pub const SCALE: usize = 10;
 
 pub struct Video {
     pub gfx: Vec<u32>,

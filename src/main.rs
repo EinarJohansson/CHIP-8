@@ -1,11 +1,7 @@
 mod chip8;
-use chip8::Chip8;
+use chip8::{Chip8, video::WIDTH, video::HEIGHT, video::SCALE};
 
 use minifb::{Window, WindowOptions};
-
-const WIDTH: usize = 64;
-const HEIGHT: usize = 32;
-const SCALE: usize = 10;
 
 fn main() {
     // Creating a chip-8 emulator
