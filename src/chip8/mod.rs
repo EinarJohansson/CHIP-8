@@ -1,10 +1,10 @@
 mod video;
-use self::video::Video;
+use video::Video;
 
 /// A chip-8 emulator🎮
 #[allow(dead_code)]
 pub struct Chip8 {
-    pub memory: Vec<u8>,    // Stored big-endian, 4 kB
+    memory: Vec<u8>,    // Stored big-endian, 4 kB
     opcode:     u16,        // Current opcode
     v:          Vec<u8>,    // General purpose registers
     i:          u16,        // Index register
