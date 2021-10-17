@@ -27,10 +27,10 @@ CHIP-8 emulator written in rust😸🎮
     - [x] 8xy6 - SHR Vx {, Vy}
     - [x] 8xy7 - SUBN Vx, Vy
     - [x] 8xyE - SHL Vx {, Vy}
-    - [ ] 9xy0 - SNE Vx, Vy
+    - [x] 9xy0 - SNE Vx, Vy
     - [x] Annn - LD I, addr
-    - [ ] Bnnn - JP V0, addr
-    - [ ] Cxkk - RND Vx, byte
+    - [x] Bnnn - JP V0, addr
+    - [x] Cxkk - RND Vx, byte
     - [x] Dxyn - DRW Vx, Vy, nibble
     - [ ] Ex9E - SKP Vx
     - [ ] ExA1 - SKNP Vx

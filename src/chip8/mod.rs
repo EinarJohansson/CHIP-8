@@ -1,10 +1,12 @@
 pub mod video;
 use video::Video;
 
+use rand::Rng;
+
 /// A chip-8 emulator🎮
 #[allow(dead_code)]
 pub struct Chip8 {
-    memory: Vec<u8>,    // Stored big-endian, 4 kB
+    memory:     Vec<u8>,    // Stored big-endian, 4 kB
     opcode:     u16,        // Current opcode
     v:          Vec<u8>,    // General purpose registers
     i:          u16,        // Index register
@@ -195,9 +197,26 @@ impl Chip8 {
                     _ => () 
                 }
             },
+            0x9 => {
+                // Skips the next instruction if VX does not equal VY
+                if self.v[x] != self.v[y] {
+                    self.pc += 2;
+                }
+            },
             0xA => {
                 // Set index register to NNN
                 self.i = nnn;
+            },
+            0xB => {
+                // Jumps to the address NNN plus V0
+                let (wrapped_value, _) = (self.v[0] as u16).overflowing_add(nnn);
+                self.pc = wrapped_value;
+                increment_pc = false;
+            },
+            0xC => {
+                // Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.
+                let random_number: u8 = rand::thread_rng().gen();
+                self.v[x] = random_number & nn;
             },
             0xD => {
                 // Draw
@@ -221,13 +240,12 @@ impl Chip8 {
                             if pixel == 1 {
                                 self.v[0xF] = 1
                             }
-                            
+
                             self.video.xor(gfx_index);
                         }
-
                     }
                 }
-            }
+            },
             _ => ()
         }
 
