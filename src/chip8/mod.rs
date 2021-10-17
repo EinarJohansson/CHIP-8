@@ -198,9 +198,11 @@ impl Chip8 {
                 }
             },
             0x9 => {
-                // Skips the next instruction if VX does not equal VY
-                if self.v[x] != self.v[y] {
-                    self.pc += 2;
+                if n == 0x0 {
+                    // Skips the next instruction if VX does not equal VY
+                    if self.v[x] != self.v[y] {
+                        self.pc += 2;
+                    }
                 }
             },
             0xA => {
