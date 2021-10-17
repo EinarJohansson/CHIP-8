@@ -8,7 +8,7 @@ CHIP-8 emulator written in rust😸🎮
 - [ ] Timers
 - [ ] Opcodes
     - [x] 00E0 - CLS
-    - [ ] 00EE - RET
+    - [ ] <strike>00EE - RET</strike>
     - [ ] 0nnn - SYS addr
     - [x] 1nnn - JP addr
     - [ ] 2nnn - CALL addr
