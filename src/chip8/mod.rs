@@ -91,13 +91,51 @@ impl Chip8 {
 
         match (instruction & 0xF000) >> 12 {
             0x0 => {
-                // Clear screen
-                self.video.clear_screen();
+                match nnn {
+                    0x0E0 => {
+                        // Clear screen
+                        self.video.clear_screen();
+                    },
+                    0x0EE => {
+                        // Return from a subroutine
+                        if let Some(adress) = self.stack.pop() {
+                            self.pc = adress;
+                            increment_pc = false;
+                        }
+                    },
+                    _ => ()
+                }
             },
             0x1 => {
                 // Jump
                 self.pc = nnn;
                 increment_pc = false;
+            },
+            0x2 => {
+                // Call subroutine at NNN
+                self.stack.push(self.pc);
+                self.pc = nnn;
+                increment_pc = false;
+            },
+            0x3 => {
+                // Skips the next instruction if VX equals NN
+                if self.v[x] == nn {
+                    self.pc += 2;
+                }
+            },
+            0x4 => {
+                // Skips the next instruction if VX does not equal NN.
+                if self.v[x] != nn {
+                    self.pc += 2;
+                }
+            },
+            0x5 => {
+                if n == 0x0 {
+                    // Skips the next instruction if VX equals VY. 
+                    if self.v[x] == self.v[y] {
+                        self.pc += 2;
+                    }
+                }
             },
             0x6 => {
                 // Update Vx
@@ -105,9 +143,57 @@ impl Chip8 {
             },
             0x7 => {
                 // Add to Vx
-                let (wrapped_value, overflow) = self.v[x].overflowing_add(nn);
-                self.v[0xF] = if overflow {1} else {0}; // Carry flag
+                let (wrapped_value, _) = self.v[x].overflowing_add(nn);
                 self.v[x] = wrapped_value;
+            },
+            0x8 => {
+                match n {
+                    0x0 => {
+                        // Sets VX to the value of VY.
+                        self.v[x] = self.v[y];
+                    },
+                    0x1 => {
+                        // Sets VX to VX or VY. (Bitwise OR operation);
+                        self.v[x] |= self.v[y];
+                    },
+                    0x2 => {
+                        // Sets VX to VX and VY. (Bitwise AND operation);
+                        self.v[x] &= self.v[y];
+                    },
+                    0x3 => {
+                        // Sets VX to VX xor VY
+                        self.v[x] ^= self.v[y];
+                    },
+                    0x4 => {
+                        // Adds VY to VX
+                        let (wrapped_value, overflow) = self.v[x].overflowing_add(self.v[y]);
+                        self.v[0xF] = if overflow {1} else {0}; // Set carry flag
+                        self.v[x] = wrapped_value;
+                    },
+                    0x5 => {
+                        // VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there is not.
+                        let (wrapped_value, overflow) = self.v[x].overflowing_sub(self.v[y]);
+                        self.v[0xF] = if !overflow {1} else {0}; // Set carry flag
+                        self.v[x] = wrapped_value;
+                    },
+                    0x6 => {
+                        // Stores the least significant bit of VX in VF and then shifts VX to the right by 1.
+                        self.v[0xF] = self.v[x] & 0x1;
+                        self.v[x] >>= 1;
+                    },
+                    0x7 => {
+                        // Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there is not.
+                        let (wrapped_value, overflow) = self.v[y].overflowing_sub(self.v[x]);
+                        self.v[0xF] = if !overflow {1} else {0}; // Set carry flag
+                        self.v[x] = wrapped_value;
+                    },
+                    0xE => {
+                        // Stores the most significant bit of VX in VF and then shifts VX to the left by 1.
+                        self.v[0xF] = self.v[x] & 0x80;
+                        self.v[x] <<= 1;
+                    },
+                    _ => () 
+                }
             },
             0xA => {
                 // Set index register to NNN
@@ -148,6 +234,5 @@ impl Chip8 {
         if increment_pc {
             self.pc += 2;
         }
-
     }
 }
