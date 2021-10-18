@@ -38,8 +38,8 @@ CHIP-8 emulator written in rust😸🎮
     - [ ] Fx0A - LD Vx, K
     - [ ] Fx15 - LD DT, Vx
     - [ ] Fx18 - LD ST, Vx
-    - [ ] Fx1E - ADD I, Vx
-    - [ ] Fx29 - LD F, Vx
-    - [ ] Fx33 - LD B, Vx
-    - [ ] Fx55 - LD [I], Vx
-    - [ ] Fx65 - LD Vx, [I]
+    - [x] Fx1E - ADD I, Vx
+    - [x] Fx29 - LD F, Vx
+    - [x] Fx33 - LD B, Vx
+    - [x] Fx55 - LD [I], Vx
+    - [x] Fx65 - LD Vx, [I]

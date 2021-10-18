@@ -1,4 +1,6 @@
 pub mod video;
+use core::panic;
+
 use video::Video;
 
 use rand::Rng;
@@ -105,7 +107,9 @@ impl Chip8 {
                             increment_pc = false;
                         }
                     },
-                    _ => ()
+                    _ => {
+                        panic!("Wat dis mean doe: {:x}", instruction);
+                    }
                 }
             },
             0x1 => {
@@ -194,7 +198,9 @@ impl Chip8 {
                         self.v[0xF] = self.v[x] & 0x80;
                         self.v[x] <<= 1;
                     },
-                    _ => () 
+                    _ => {
+                        panic!("Wat dis mean doe: {:x}", instruction);
+                    } 
                 }
             },
             0x9 => {
@@ -248,7 +254,52 @@ impl Chip8 {
                     }
                 }
             },
-            _ => ()
+            0xE => {
+                // Keyboard stuff
+            },
+            0xF => {
+                match nn {
+                    0x1E => {
+                        // Adds VX to I. VF is not affected
+                        let (wrapped_value, _) = self.i.overflowing_add(self.v[x] as u16);
+                        self.i = wrapped_value;
+                    },
+                    0x29 => {
+                        // Sets I to the location of the sprite for the character in VX
+                        let (wrapped_value, _) = (self.v[x] as u16).overflowing_mul(5);
+                        self.i = wrapped_value;
+                    },
+                    0x33 => {
+                        // Get the hundreds digit and place it in I.
+                        self.memory[self.i as usize] = self.v[x] / 100;
+
+                        // Get tens digit and place it in I+1. Gets a value between 0 and 99,
+                        // then divides by 10 to give us a value between 0 and 9.
+                        self.memory[(self.i + 1) as usize] =(self.v[x] % 100) / 10;
+
+                        // Get the value of the ones (last) digit and place it in I+2.
+                        self.memory[(self.i + 2) as usize] = self.v[x] % 10;
+                    },
+                    0x55 => {
+                        // Stores V0 to VX (including VX) in memory starting at address I.
+                        for index in 0..=x {
+                            self.memory[self.i as usize + index] = self.v[index]
+                        }
+                    },
+                    0x65 => {
+                        // Fills V0 to VX (including VX) with values from memory starting at address I.
+                        for index in 0..=x {
+                            self.v[index] = self.memory[self.i as usize + index]
+                        }
+                    },
+                    _ => {
+                        panic!("Wat dis mean doe: {:x}", instruction);                        
+                    }
+                }
+            },
+            _ => {
+                panic!("Wat dis mean doe: {:x}", instruction);
+            }
         }
 
         if increment_pc {

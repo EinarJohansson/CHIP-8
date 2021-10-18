@@ -8,7 +8,7 @@ fn main() {
     let mut chip: Chip8 = Chip8::new();
 
     // Path to a game
-    let path = std::path::Path::new("games/ibm.ch8");
+    let path = std::path::Path::new("games/space.ch8");
 
     // Load the game into memory
     chip.load(path);
