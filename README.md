@@ -4,9 +4,9 @@ CHIP-8 emulator written in rust😸🎮
 ### TODO
 - [x] Display
 - [x] Scale resolution
-- [ ] Sound
-- [ ] Input
 - [ ] Timers
+- [ ] Input
+- [ ] Sound
 - [ ] Opcodes
     - [x] 00E0 - CLS
     - [x] 00EE - RET
