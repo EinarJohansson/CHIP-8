@@ -6,15 +6,12 @@ use video::Video;
 use rand::Rng;
 
 /// A chip-8 emulator🎮
-#[allow(dead_code)]
 pub struct Chip8 {
     memory:     Vec<u8>,    // Stored big-endian, 4 kB
-    opcode:     u16,        // Current opcode
     v:          Vec<u8>,    // General purpose registers
     i:          u16,        // Index register
     pc:         u16,        // Program counter
     stack:      Vec<u16>,   // Used to call subroutines/functions and return from them
-    sp:         u16,        // Remember which level of the stack is used
     pub video:  Video,      // Graphics
 }
 
@@ -51,12 +48,10 @@ impl Chip8 {
 
         Self {
             memory,
-            opcode: 0x00,
             v:      vec![0x00; 0x10],
             i:      0x0000,
             pc:     0x0200,
             stack:  vec![0x0000; 0x10],
-            sp:     0x0000,
             video:  Video::new()
         }
     }
