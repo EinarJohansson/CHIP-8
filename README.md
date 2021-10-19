@@ -5,6 +5,8 @@ CHIP-8 emulator written in rust😸🎮
 - [x] Display
 - [x] Scale resolution
 - [ ] Timers
+    - [x] Delay
+    - [ ] Sound
 - [ ] Input
 - [ ] Sound
 - [ ] Opcodes
@@ -34,9 +36,9 @@ CHIP-8 emulator written in rust😸🎮
     - [x] Dxyn - DRW Vx, Vy, nibble
     - [ ] Ex9E - SKP Vx
     - [ ] ExA1 - SKNP Vx
-    - [ ] Fx07 - LD Vx, DT
+    - [x] Fx07 - LD Vx, DT
     - [ ] Fx0A - LD Vx, K
-    - [ ] Fx15 - LD DT, Vx
+    - [x] Fx15 - LD DT, Vx
     - [ ] Fx18 - LD ST, Vx
     - [x] Fx1E - ADD I, Vx
     - [x] Fx29 - LD F, Vx

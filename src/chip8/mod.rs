@@ -7,12 +7,13 @@ use rand::Rng;
 
 /// A chip-8 emulator🎮
 pub struct Chip8 {
-    memory:     Vec<u8>,    // Stored big-endian, 4 kB
-    v:          Vec<u8>,    // General purpose registers
-    i:          u16,        // Index register
-    pc:         u16,        // Program counter
-    stack:      Vec<u16>,   // Used to call subroutines/functions and return from them
-    pub video:  Video,      // Graphics
+    memory:         Vec<u8>,    // Stored big-endian, 4 kB
+    v:              Vec<u8>,    // General purpose registers
+    i:              u16,        // Index register
+    pc:             u16,        // Program counter
+    stack:          Vec<u16>,   // Used to call subroutines/functions and return from them
+    delay_timer:    u8,         // Delay timer
+    pub video:      Video,      // Graphics
 }
 
 impl Chip8 {
@@ -48,11 +49,12 @@ impl Chip8 {
 
         Self {
             memory,
-            v:      vec![0x00; 0x10],
-            i:      0x0000,
-            pc:     0x0200,
-            stack:  vec![0x0000; 0x10],
-            video:  Video::new()
+            v:              vec![0x00; 0x10],
+            i:              0x0000,
+            pc:             0x0200,
+            stack:          vec![0x0000; 0x10],
+            delay_timer:    0,
+            video:          Video::new()
         }
     }
 
@@ -69,8 +71,14 @@ impl Chip8 {
 
     /// Execute one instruction from the program
     pub fn cycle(&mut self) {
-        let instruction = self.fetch();
-        self.execute(instruction);
+        for _ in 0..10 {
+            let instruction = self.fetch();
+            self.execute(instruction);
+        }
+
+        if self.delay_timer > 0 {
+            self.delay_timer -= 1;
+        }
     }
 
     /// Combines a pair of u8's at the pc adress into one u16 opcode
@@ -99,7 +107,6 @@ impl Chip8 {
                         // Return from a subroutine
                         if let Some(adress) = self.stack.pop() {
                             self.pc = adress;
-                            increment_pc = false;
                         }
                     },
                     _ => {
@@ -249,11 +256,16 @@ impl Chip8 {
                     }
                 }
             },
-            0xE => {
-                // Keyboard stuff
-            },
             0xF => {
                 match nn {
+                    0x07 => {
+                        // Sets VX to the value of the delay timer.
+                        self.v[x] = self.delay_timer;
+                    },
+                    0x15 => {
+                        // Sets the delay timer to VX.
+                        self.delay_timer = self.v[x];
+                    },
                     0x1E => {
                         // Adds VX to I. VF is not affected
                         let (wrapped_value, _) = self.i.overflowing_add(self.v[x] as u16);
