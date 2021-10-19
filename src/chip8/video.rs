@@ -24,7 +24,7 @@ impl Video {
     }
 
     pub fn get_index(&self, x_coordinate: usize, y_coordinate: usize) -> usize {
-        x_coordinate + 64 * y_coordinate
+        (x_coordinate + 64 * y_coordinate) % 2048
     }
 
     pub fn get_pixel(&self, index: usize) -> u8 {

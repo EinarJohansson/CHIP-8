@@ -71,6 +71,7 @@ impl Chip8 {
 
     /// Execute one instruction from the program
     pub fn cycle(&mut self) {
+        // Execute at around 500 Hz
         for _ in 0..10 {
             let instruction = self.fetch();
             self.execute(instruction);
@@ -238,13 +239,13 @@ impl Chip8 {
                     let byte = self.memory[self.i as usize + byte_index];
 
                     for bit_index in 0..8 {
-                        let bit = byte & (0x80 >> bit_index);
-                        if bit != 0 {
+                        if (byte & (0x80 >> bit_index)) != 0 {
                             let gfx_index = self.video.get_index(
                                 x_coordinate + bit_index,
                                 y_coordinate + byte_index
                             );
 
+                            // Index out of bounds?
                             let pixel = self.video.get_pixel(gfx_index);
 
                             if pixel == 1 {
