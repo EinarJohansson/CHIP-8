@@ -4,10 +4,10 @@ CHIP-8 emulator written in rust😸🎮
 ### TODO
 - [x] Display
 - [x] Scale resolution
-- [ ] Timers
+- [x] Timers
     - [x] Delay
-    - [ ] Sound
-- [ ] Input
+    - [x] Sound
+- [x] Input
 - [ ] Sound
 - [ ] Opcodes
     - [x] 00E0 - CLS
@@ -34,12 +34,12 @@ CHIP-8 emulator written in rust😸🎮
     - [x] Bnnn - JP V0, addr
     - [x] Cxkk - RND Vx, byte
     - [x] Dxyn - DRW Vx, Vy, nibble
-    - [ ] Ex9E - SKP Vx
-    - [ ] ExA1 - SKNP Vx
+    - [x] Ex9E - SKP Vx
+    - [x] ExA1 - SKNP Vx
     - [x] Fx07 - LD Vx, DT
     - [ ] Fx0A - LD Vx, K
     - [x] Fx15 - LD DT, Vx
-    - [ ] Fx18 - LD ST, Vx
+    - [x] Fx18 - LD ST, Vx
     - [x] Fx1E - ADD I, Vx
     - [x] Fx29 - LD F, Vx
     - [x] Fx33 - LD B, Vx

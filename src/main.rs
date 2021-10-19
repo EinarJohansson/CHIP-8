@@ -1,7 +1,7 @@
 mod chip8;
 use chip8::{Chip8, video::WIDTH, video::HEIGHT, video::SCALE};
 
-use minifb::{Window, WindowOptions};
+use minifb::{KeyRepeat, Window, WindowOptions};
 
 fn main() {
     // Creating a chip-8 emulator
@@ -29,6 +29,26 @@ fn main() {
 
     // Continue while window is not closed
     while window.is_open() {
+        // Look for input
+        window
+            .get_keys_pressed(KeyRepeat::Yes)
+            .unwrap()
+            .iter()
+            .for_each(|key| {
+                // Set the current pressed key 
+                chip.keyboard.set_key(key);
+            }
+        );
+
+        window
+        .get_keys_released()
+        .unwrap()
+        .iter()
+        .for_each(|_| {
+            // Clear the pressed key on release
+            chip.keyboard.clear();
+        });
+        
         // Execute one cycle
         chip.cycle();
 

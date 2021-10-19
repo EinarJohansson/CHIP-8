@@ -1,9 +1,9 @@
 pub mod video;
+mod keyboard;
 use core::panic;
-
 use video::Video;
-
 use rand::Rng;
+use keyboard::Keyboard;
 
 /// A chip-8 emulator🎮
 pub struct Chip8 {
@@ -13,7 +13,9 @@ pub struct Chip8 {
     pc:             u16,        // Program counter
     stack:          Vec<u16>,   // Used to call subroutines/functions and return from them
     delay_timer:    u8,         // Delay timer
+    sound_timer:    u8,         // Sound timer
     pub video:      Video,      // Graphics
+    pub keyboard:   Keyboard    // Keyboard
 }
 
 impl Chip8 {
@@ -54,7 +56,9 @@ impl Chip8 {
             pc:             0x0200,
             stack:          vec![0x0000; 0x10],
             delay_timer:    0,
-            video:          Video::new()
+            sound_timer:    0,
+            video:          Video::new(),
+            keyboard:       Keyboard::new()
         }
     }
 
@@ -77,9 +81,8 @@ impl Chip8 {
             self.execute(instruction);
         }
 
-        if self.delay_timer > 0 {
-            self.delay_timer -= 1;
-        }
+        self.delay_timer = self.delay_timer.saturating_sub(1);
+        self.sound_timer = self.delay_timer.saturating_sub(1);
     }
 
     /// Combines a pair of u8's at the pc adress into one u16 opcode
@@ -245,7 +248,6 @@ impl Chip8 {
                                 y_coordinate + byte_index
                             );
 
-                            // Index out of bounds?
                             let pixel = self.video.get_pixel(gfx_index);
 
                             if pixel == 1 {
@@ -257,6 +259,26 @@ impl Chip8 {
                     }
                 }
             },
+            0xE => {
+                match nn {
+                    0x9E => {
+                        // Skips the next instruction if the key stored in VX is pressed. 
+                        if self.keyboard.is_pressed(self.v[x]) {
+                            self.pc += 2;
+                            self.keyboard.clear();
+                        }
+                    },
+                    0xA1 => {
+                        // Skips the next instruction if the key stored in VX is not pressed. 
+                        if !self.keyboard.is_pressed(self.v[x]) {
+                            self.pc += 2;
+                        }
+                    },
+                    _ => {
+                        panic!("Wat dis mean doe: {:x}", instruction);
+                    }
+                };
+            },
             0xF => {
                 match nn {
                     0x07 => {
@@ -267,6 +289,10 @@ impl Chip8 {
                         // Sets the delay timer to VX.
                         self.delay_timer = self.v[x];
                     },
+                    0x18 => {
+                        // Sets the sound timer to VX.
+                        self.sound_timer = self.v[x];
+                    }
                     0x1E => {
                         // Adds VX to I. VF is not affected
                         let (wrapped_value, _) = self.i.overflowing_add(self.v[x] as u16);
