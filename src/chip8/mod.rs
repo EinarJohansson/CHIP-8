@@ -250,7 +250,7 @@ impl Chip8 {
 
                             let pixel = self.video.get_pixel(gfx_index);
 
-                            if pixel == 1 {
+                            if pixel == 255 {
                                 self.v[0xF] = 1
                             }
 
