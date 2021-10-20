@@ -201,7 +201,7 @@ impl Chip8 {
                     },
                     0xE => {
                         // Stores the most significant bit of VX in VF and then shifts VX to the left by 1.
-                        self.v[0xF] = self.v[x] & 0x80;
+                        self.v[0xF] = (self.v[x] & 0x80) >> 7;
                         self.v[x] <<= 1;
                     },
                     _ => {
@@ -284,6 +284,15 @@ impl Chip8 {
                     0x07 => {
                         // Sets VX to the value of the delay timer.
                         self.v[x] = self.delay_timer;
+                    },
+                    0x0a => {
+                        // A key press is awaited, and then stored in VX.
+                        if let Some (keyval) = self.keyboard.pressed {
+                            self.v[x] = keyval;
+                        }
+                        else {
+                            self.pc -= 2;
+                        }
                     },
                     0x15 => {
                         // Sets the delay timer to VX.

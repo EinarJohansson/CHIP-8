@@ -9,7 +9,7 @@ CHIP-8 emulator written in rust😸🎮
     - [x] Sound
 - [x] Input
 - [ ] Sound
-- [ ] Opcodes
+- [x] Opcodes
     - [x] 00E0 - CLS
     - [x] 00EE - RET
     - [ ] <strike>0nnn - SYS addr</strike>
@@ -37,7 +37,7 @@ CHIP-8 emulator written in rust😸🎮
     - [x] Ex9E - SKP Vx
     - [x] ExA1 - SKNP Vx
     - [x] Fx07 - LD Vx, DT
-    - [ ] Fx0A - LD Vx, K
+    - [x] Fx0A - LD Vx, K
     - [x] Fx15 - LD DT, Vx
     - [x] Fx18 - LD ST, Vx
     - [x] Fx1E - ADD I, Vx
