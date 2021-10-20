@@ -155,7 +155,7 @@ impl Chip8 {
             },
             0x7 => {
                 // Add to Vx
-                let (wrapped_value, _) = self.v[x].overflowing_add(nn);
+                let wrapped_value = self.v[x].wrapping_add(nn);
                 self.v[x] = wrapped_value;
             },
             0x8 => {
@@ -223,7 +223,7 @@ impl Chip8 {
             },
             0xB => {
                 // Jumps to the address NNN plus V0
-                let (wrapped_value, _) = (self.v[0] as u16).overflowing_add(nnn);
+                let wrapped_value = (self.v[0] as u16).wrapping_add(nnn);
                 self.pc = wrapped_value;
                 increment_pc = false;
             },
@@ -295,12 +295,12 @@ impl Chip8 {
                     }
                     0x1E => {
                         // Adds VX to I. VF is not affected
-                        let (wrapped_value, _) = self.i.overflowing_add(self.v[x] as u16);
+                        let wrapped_value  = self.i.wrapping_add(self.v[x] as u16);
                         self.i = wrapped_value;
                     },
                     0x29 => {
                         // Sets I to the location of the sprite for the character in VX
-                        let (wrapped_value, _) = (self.v[x] as u16).overflowing_mul(5);
+                        let wrapped_value  = (self.v[x] as u16).wrapping_mul(5);
                         self.i = wrapped_value;
                     },
                     0x33 => {
