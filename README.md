@@ -8,7 +8,7 @@ CHIP-8 emulator written in rust😸🎮
     - [x] Delay
     - [x] Sound
 - [x] Input
-- [ ] Sound
+- [ ] <strike>Sound</strike>
 - [x] Opcodes
     - [x] 00E0 - CLS
     - [x] 00EE - RET
